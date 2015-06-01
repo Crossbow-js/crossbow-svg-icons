@@ -1,5 +1,5 @@
 {
-  "name": "crossbow-sass",
+  "name": "crossbow-svg-icons",
   "version": "1.0.2",
   "description": "Sass, autoprefixer, minification",
   "main": "index.js",
