@@ -1,12 +1,11 @@
-var symbols = require('easy-svg');
-var prom = require('prom-seq');
+var symbols = require('easy-svg').stream;
 
 /**
  * Define the tasks that make up a build
  * @type {Object}
  */
 var tasks = [makeSymbols];
-var builder = prom.create(tasks);
+var ns    = ['svg-icons'];
 
 /**
  * @param deferred
@@ -15,23 +14,12 @@ var builder = prom.create(tasks);
  */
 function makeSymbols(deferred, previous, ctx) {
 
-    ctx.vfs.src(ctx.paths.svgIcons.input)
-        .pipe(symbols.stream())
+    ctx.vfs.src(ctx.path.make(ns.concat('input')))
+        .pipe(symbols())
         .on('error', deferred.reject)
-        .pipe(ctx.vfs.dest(ctx.paths.svgIcons.output))
+        .pipe(ctx.vfs.dest(ctx.path.make(ns.concat('output'))))
         .on('end', deferred.resolve);
 }
 
-if (!module.parent) {
-    builder('', require('crossbow-ctx')())
-        .progress(function (obj) {
-            console.log(obj.msg);
-        })
-        .catch(function (err) {
-            console.log(err.stack);
-        });
-}
-
-module.exports = builder;
 module.exports.tasks = tasks;
 
